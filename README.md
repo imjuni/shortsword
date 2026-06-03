@@ -13,7 +13,7 @@ npx swd
 ```
 
 ```bash
-npx swd -s 2 -f 10 -p ./tsconfig.json
+npx swd -s 2 -f 10 -x "**/__tests__/**" -p ./tsconfig.json
 ```
 
 ## Options
@@ -22,6 +22,8 @@ npx swd -s 2 -f 10 -p ./tsconfig.json
 | --- | --- | ---: | --- |
 | `--max-statements` | `-s` | `2` | Maximum top-level statements allowed per file |
 | `--max-files` | `-f` | `10` | Maximum TypeScript files allowed per directory |
+| `--include` | `-i` | - | Additional include glob patterns |
+| `--exclude` | `-x` | - | Additional exclude glob patterns |
 | `--project` | `-p` | `./tsconfig.json` | Path to the `tsconfig.json` used to resolve target files |
 | `--language` | `-l` | auto-detected | Message language |
 
@@ -48,6 +50,7 @@ You can use a configuration file instead of CLI options. Shortsword reads config
 export default {
   "max-statements": 2,
   "max-files": 10,
+  exclude: ["**/__tests__/**", "**/__test__/**"],
   project: "./tsconfig.json",
 };
 ```

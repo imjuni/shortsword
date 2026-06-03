@@ -13,7 +13,7 @@ npx swd
 ```
 
 ```bash
-npx swd -s 2 -f 10 -p ./tsconfig.json
+npx swd -s 2 -f 10 -x "**/__tests__/**" -p ./tsconfig.json
 ```
 
 ## Options
@@ -22,6 +22,8 @@ npx swd -s 2 -f 10 -p ./tsconfig.json
 | --- | --- | ---: | --- |
 | `--max-statements` | `-s` | `2` | 한 파일에 허용할 최대 top-level statement 개수 |
 | `--max-files` | `-f` | `10` | 한 디렉터리에 허용할 최대 TypeScript 파일 개수 |
+| `--include` | `-i` | - | 추가로 포함할 glob 패턴 |
+| `--exclude` | `-x` | - | 추가로 제외할 glob 패턴 |
 | `--project` | `-p` | `./tsconfig.json` | `tsconfig.json` 경로. 검사 대상 파일을 tsconfig.json 기준으로 자동 적용 |
 | `--language` | `-l` | 자동 감지 | 메시지 언어 |
 
@@ -48,6 +50,7 @@ CLI 옵션 대신 설정 파일을 사용할 수 있습니다. Shortsword는 `sh
 export default {
   "max-statements": 2,
   "max-files": 10,
+  exclude: ["**/__tests__/**", "**/__test__/**"],
   project: "./tsconfig.json",
 };
 ```
