@@ -14,7 +14,7 @@ describe("hasExactlyNDeclarations", () => {
     });
   });
 
-  it("should return true when source file has only 2 statement, type alias and function", () => {
+  it("should return 2 when source file has type alias and function declarations", () => {
     const filename = randomUUID().replaceAll("-", "");
     const sourceFileText = `
 import pathe from 'pathe';
@@ -32,11 +32,11 @@ export function hello(): Name {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile, 2);
-    expect(result).toBeTruthy();
+    const result = hasExactlyNDeclarations(sourceFile);
+    expect(result).toBe(2);
   });
 
-  it("should return true when source file has only 2 statement, interface and function", () => {
+  it("should return 2 when source file has interface and function declarations", () => {
     const filename = randomUUID().replaceAll("-", "");
     const sourceFileText = `
 import pathe from 'pathe';
@@ -56,11 +56,11 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile, 2);
-    expect(result).toBeTruthy();
+    const result = hasExactlyNDeclarations(sourceFile);
+    expect(result).toBe(2);
   });
 
-  it("should return true when source file has only 2 statement, variable and function", () => {
+  it("should return 2 when source file has variable and function declarations", () => {
     const filename = randomUUID().replaceAll("-", "");
     const sourceFileText = `
 import pathe from 'pathe';
@@ -78,11 +78,11 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile, 2);
-    expect(result).toBeTruthy();
+    const result = hasExactlyNDeclarations(sourceFile);
+    expect(result).toBe(2);
   });
 
-  it("should return true when source file has only 2 statement, variable and function", () => {
+  it("should return 3 when source file has two variables and function declarations", () => {
     const filename = randomUUID().replaceAll("-", "");
     const sourceFileText = `
 import pathe from 'pathe';
@@ -102,7 +102,7 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile, 2);
-    expect(result).toBeFalsy();
+    const result = hasExactlyNDeclarations(sourceFile);
+    expect(result).toBe(3);
   });
 });

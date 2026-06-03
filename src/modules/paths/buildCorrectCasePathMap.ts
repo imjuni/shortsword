@@ -18,50 +18,28 @@ export interface ICaseConflict {
  * with an error on case-insensitive platforms (macOS / Windows) when two TypeScript
  * source files in the same directory differ only by letter case (e.g. Aa.ts / aA.ts).
  *
- * @param inputPaths - Absolute file paths from the TypeScript compiler (e.g. tsconfig
+ * @param filePaths - Absolute file paths from the TypeScript compiler (e.g. tsconfig
  *   fileNames or ts-morph SourceFile.getFilePath()). These may carry incorrect casing
  *   on case-insensitive file systems.
  * @returns A Map whose keys are the original input paths and whose values are the
  *   correctly-cased absolute posix paths as reported by the real filesystem.
  */
 export async function buildCorrectCasePathMap(
-  inputPaths: string[],
+  dirPathMap: Map<string, string[]>,
 ): Promise<Map<string, string>> {
   // Group input paths by their parent directory so each directory is read only once.
-  const dirToInputs = new Map<string, string[]>();
-  for (const inputPath of inputPaths) {
-    const dir = pathe.dirname(inputPath);
-    const list = dirToInputs.get(dir);
-    if (list == null) {
-      dirToInputs.set(dir, [inputPath]);
-    } else {
-      list.push(inputPath);
-    }
-  }
 
   const platform = os.platform();
   const isCaseInsensitive = platform === "darwin" || platform === "win32";
   const conflicts: ICaseConflict[] = [];
   const resultMap = new Map<string, string>();
 
-  // Read all directories in parallel to avoid no-await-in-loop.
-  const dirEntries = await Promise.all(
-    Array.from(dirToInputs.keys()).map(async (dir) => {
-      try {
-        const entries = await fs.promises.readdir(dir);
-        return { dir, entries };
-      } catch {
-        return { dir, entries: null };
-      }
-    }),
-  );
-
-  for (const { dir, entries } of dirEntries) {
+  for (const [dir, entries] of dirPathMap.entries()) {
     // dirEntries is built from dirToInputs.keys(), so get() is always defined here
     /* v8 ignore next */
-    const pathsInDir = dirToInputs.get(dir) ?? [];
+    const pathsInDir = dirPathMap.get(dir) ?? [];
 
-    if (entries == null) {
+    if (entries.length <= 0) {
       // Directory is not readable; keep the original paths unchanged.
       for (const pathInDir of pathsInDir) {
         resultMap.set(pathInDir, replaceSepToPosix(pathInDir));

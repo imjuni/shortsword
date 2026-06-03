@@ -1,16 +1,16 @@
 import type { CommandContext } from "citty";
 import consola from "consola";
+import { isDescendant } from "my-node-fp";
 import pathe from "pathe";
 import type * as tsm from "ts-morph";
 import type { shortswordArgs } from "#commands/shortswordArgs.js";
 import { getLocale } from "#i18n/getLocale.js";
 import { i18n } from "#i18n/i18n.js";
 import { loadArgs } from "#modules/args/loadArgs.js";
-import { getTypeScriptConfig } from "#modules/compilers/getTypeScriptConfig.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
 import { hasExactlyNDeclarations } from "#modules/compilers/hasExactlyNDeclarations.js";
 import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.js";
-import { isDescendant } from "#modules/paths/isDescendant.js";
+import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
 
 export const shortswordRun = async ({
   args,
@@ -19,15 +19,15 @@ export const shortswordRun = async ({
   const locale = args.language ?? getLocale();
   i18n.locale(locale);
 
-  consola.debug("Shortsword locale: ", locale);
+  consola.debug("Use locale: ", locale);
 
   // Validation configuration after loading configuration and args
   const config = await loadArgs(args, cmd);
 
   // read tsconfig.json
   const tsconfigDir = pathe.dirname(config.data.project);
-  const tsconfig = getTypeScriptConfig(config.data.project);
-  consola.debug("TypeScript tsconfig.json path: ", locale);
+
+  consola.debug("tsconfig: ", tsconfigDir, config.data.project);
 
   // read TypeScript project
   const tsProject = getTypeScriptProject({
@@ -38,10 +38,11 @@ export const shortswordRun = async ({
   const rawFilePaths = tsProject
     .getSourceFiles()
     .map((sourceFile) => sourceFile.getFilePath().toString());
-  const caseMap = await buildCorrectCasePathMap(rawFilePaths);
-  const filePaths = rawFilePaths
-    .map((rawFilePath) => caseMap.get(rawFilePath) ?? rawFilePath)
-    .filter((filePath) => isDescendant(tsconfigDir, filePath));
+  const filteredRawFilePaths = rawFilePaths.filter((filePath) =>
+    isDescendant(tsconfigDir, filePath),
+  );
+  const dirPathMap = await getDirPathMap(filteredRawFilePaths);
+  const caseMap = await buildCorrectCasePathMap(dirPathMap);
 
   // Build correctedPath → SourceFile map so lookups remain correct after case
   // correction. ts-morph registers files by their original (possibly wrong-cased)
@@ -54,9 +55,22 @@ export const shortswordRun = async ({
     }),
   );
 
-  const detected = sourceFileMap
-    .values()
-    .filter((sourceFile) =>
-      hasExactlyNDeclarations(sourceFile, config.data["file-count"]),
-    );
+  const fileCountExceedDetected = Array.from(dirPathMap.entries())
+    .map(([dirPath, filePaths]) => ({ dirPath, filePaths }))
+    .filter((entry) => entry.filePaths.length > config.data["dir-count"]);
+
+  const statementDetected = Array.from(sourceFileMap.values())
+    .map((sourceFile) => ({
+      sourceFile,
+      declarations: hasExactlyNDeclarations(sourceFile),
+    }))
+    .filter((entry) => entry.declarations > config.data["file-count"]);
+
+  consola.error("오류", fileCountExceedDetected);
+  consola.error(
+    "오류: ",
+    statementDetected.map((statement) => {
+      return `${statement.sourceFile.getFilePath().toString()} > ${statement.declarations}`;
+    }),
+  );
 };
