@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import type { CommandContext } from "citty";
 import consola from "consola";
 import { isDescendant } from "my-node-fp";
@@ -66,11 +67,34 @@ export const shortswordRun = async ({
     }))
     .filter((entry) => entry.declarations > config.data["file-count"]);
 
-  consola.error("오류", fileCountExceedDetected);
-  consola.error(
-    "오류: ",
-    statementDetected.map((statement) => {
-      return `${statement.sourceFile.getFilePath().toString()} > ${statement.declarations}`;
-    }),
-  );
+  if (fileCountExceedDetected.length > 0) {
+    consola.error("오류: ");
+    console.log(
+      fileCountExceedDetected
+        .map((fileCount) => {
+          return `  ${chalk.red("✖")} "${fileCount.dirPath}" > ${fileCount.filePaths.length} files`;
+        })
+        .join("\n"),
+      "\n",
+    );
+  }
+
+  if (statementDetected.length > 0) {
+    consola.error("오류: ");
+
+    console.error(
+      statementDetected
+        .map((statement) => {
+          return `  ${chalk.red("✖")} ${statement.sourceFile.getFilePath().toString()} > ${statement.declarations} statements`;
+        })
+        .join("\n"),
+      "\n",
+    );
+  }
+
+  if (fileCountExceedDetected.length + statementDetected.length > 0) {
+    process.exit(1);
+  } else {
+    consola.success("오류 없음");
+  }
 };
