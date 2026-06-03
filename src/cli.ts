@@ -1,20 +1,21 @@
 import { defineCommand, runMain } from "citty";
+import { readPackage } from "read-pkg";
 import { install as sourceMapSupportInstall } from "source-map-support";
-import { buildArgs } from "#commands/buildArgs.js";
-import { buildRun } from "#commands/buildRun.js";
-import "rosetta";
+import { shortswordArgs } from "#commands/shortswordArgs.js";
+import { shortswordRun } from "#commands/shortswordRun.js";
 
 sourceMapSupportInstall();
 
-const buildSubCommand = defineCommand({
-	meta: { name: "build", description: "build sub command" },
-	args: buildArgs,
-	run: buildRun,
-});
+const packageJson = await readPackage();
 
 const main = defineCommand({
-	meta: { name: "hello", version: "1.0.0", description: "My Awesome CLI App" },
-	subCommands: { build: buildSubCommand },
+  meta: {
+    name: packageJson.name,
+    version: packageJson.version,
+    description: packageJson.description,
+  },
+  args: shortswordArgs,
+  run: shortswordRun,
 });
 
 runMain(main);

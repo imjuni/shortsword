@@ -26,15 +26,30 @@ importers:
       defu:
         specifier: ^6.1.7
         version: 6.1.7
+      glob:
+        specifier: ^13.0.6
+        version: 13.0.6
       my-easy-fp:
         specifier: ^0.23.0
         version: 0.23.0
+      my-node-fp:
+        specifier: ^0.10.3
+        version: 0.10.3
+      pathe:
+        specifier: ^2.0.3
+        version: 2.0.3
       rosetta:
         specifier: ^1.1.0
         version: 1.1.0
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
+      ts-morph:
+        specifier: ^28.0.0
+        version: 28.0.0
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
       url-naong:
         specifier: ^1.3.0
         version: 1.5.1(path-to-regexp@8.4.2)(qs@6.15.2)
@@ -105,9 +120,6 @@ importers:
       tsx:
         specifier: ^4.16.2
         version: 4.22.4
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
       vitest:
         specifier: ^4.1.7
         version: 4.1.8(@types/node@20.19.41)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@20.19.41)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4))
@@ -672,6 +684,9 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
+  '@ts-morph/common@0.29.0':
+    resolution: {integrity: sha512-35oUmphHbJvQ/+UTwFNme/t2p3FoKiGJ5auTjjpNTop2dyREspirjMy82PLSC1pnDJ8ah1GU98hwpVt64YXQsg==}
+
   '@tsconfig/node10@1.0.12':
     resolution: {integrity: sha512-UCYBaeFvM11aU2y3YPZ//O5Rhj+xKyzy7mvcIoAjASbigy8mHMryP5cK7dgjlz2hWxh1g5pLw084E0a/wlUSFQ==}
 
@@ -867,6 +882,9 @@ packages:
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+
+  code-block-writer@13.0.3:
+    resolution: {integrity: sha512-Oofo0pq3IKnsFtuHqSF7TqBfr71aeyZDVJ0HpmqB7FBM2qEigL0iPONSCZSO9pE9dZTAxANe5XHG9Uy0YMv8cg==}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -1264,9 +1282,16 @@ packages:
   my-easy-fp@0.19.3:
     resolution: {integrity: sha512-8cGodV0auSLh7S57pTn+pult9t1NDWA2E3gCUVqwMZB6kfV0mpGwUzM/lWYCDFEhwL6So7py/lWPEH1F2dTHJw==}
 
+  my-easy-fp@0.22.0:
+    resolution: {integrity: sha512-fWM/HrbfUiBt8GcwMXad5r8s2urQezRqNiaa5GispeXGKptpaz5m+NUwBazkow5oxktZGWyQj1bSx40xtq00zg==}
+    engines: {node: '>=16'}
+
   my-easy-fp@0.23.0:
     resolution: {integrity: sha512-HuPwdf6H398qK15nHJY2JFRoGXpuoWwPwM94tdMA2yE5/NjTNsnlhCydKJrspyrI3lj+uY3GckxcPQ28qJrnmQ==}
     engines: {node: '>=20'}
+
+  my-node-fp@0.10.3:
+    resolution: {integrity: sha512-LXTord8vAfBCP4nX1Ct/d7jXuWxeiFvDwmX+HCiLHIoNhzxg7CaippiPZV8MQ/nfX9pXSf6jpJLr/fs5QHjwKw==}
 
   my-node-fp@0.8.1:
     resolution: {integrity: sha512-KXxZrDBqDXww6SNhRLyIhTHnuPM316OJkwtaNWyVsMibky8I1CRhzFxPloL0vZ1HzrgeYYHE+QDx/dfnU0fUYg==}
@@ -1320,6 +1345,9 @@ packages:
   parse-ms@4.0.0:
     resolution: {integrity: sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==}
     engines: {node: '>=18'}
+
+  path-browserify@1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
@@ -1540,6 +1568,9 @@ packages:
   tinyrainbow@3.1.0:
     resolution: {integrity: sha512-Bf+ILmBgretUrdJxzXM0SgXLZ3XfiaUuOj/IKQHuTXip+05Xn+uyEYdVg0kYDipTBcLrCVyUzAPz7QmArb0mmw==}
     engines: {node: '>=14.0.0'}
+
+  ts-morph@28.0.0:
+    resolution: {integrity: sha512-Wp3tnZ2bzwxyTZMtgWVzXDfm7lB1Drz+y9DmmYH/L702PQhPyVrp3pkou3yIz4qjS14GY9kcpmLiOOMvl8oG1g==}
 
   ts-node@10.9.2:
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
@@ -2094,6 +2125,12 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@ts-morph/common@0.29.0':
+    dependencies:
+      minimatch: 10.2.5
+      path-browserify: 1.0.1
+      tinyglobby: 0.2.17
+
   '@tsconfig/node10@1.0.12': {}
 
   '@tsconfig/node12@1.0.11': {}
@@ -2288,6 +2325,8 @@ snapshots:
       wrap-ansi: 7.0.0
 
   clone@1.0.4: {}
+
+  code-block-writer@13.0.3: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -2641,7 +2680,13 @@ snapshots:
 
   my-easy-fp@0.19.3: {}
 
+  my-easy-fp@0.22.0: {}
+
   my-easy-fp@0.23.0: {}
+
+  my-node-fp@0.10.3:
+    dependencies:
+      my-easy-fp: 0.22.0
 
   my-node-fp@0.8.1:
     dependencies:
@@ -2699,6 +2744,8 @@ snapshots:
       type-fest: 4.41.0
 
   parse-ms@4.0.0: {}
+
+  path-browserify@1.0.1: {}
 
   path-exists@4.0.0: {}
 
@@ -2966,6 +3013,11 @@ snapshots:
       picomatch: 4.0.4
 
   tinyrainbow@3.1.0: {}
+
+  ts-morph@28.0.0:
+    dependencies:
+      '@ts-morph/common': 0.29.0
+      code-block-writer: 13.0.3
 
   ts-node@10.9.2(@types/node@20.19.41)(typescript@6.0.3):
     dependencies:
