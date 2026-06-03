@@ -7,6 +7,8 @@ export const i18n = rosetta({
         language: "choose your language",
         maxStatements: "Maximum statements allowed per file",
         maxFiles: "Maximum files allowed per directory",
+        include: "Additional include glob patterns",
+        exclude: "Additional exclude glob patterns",
         project: "tsconfig.json 파일 경로",
       },
       error: {
@@ -23,6 +25,12 @@ export const i18n = rosetta({
           max: "Maximum files cannot exceed 100",
           invalid: "Maximum files must be a valid number",
         },
+        include: {
+          invalid: "Include must be a glob pattern or glob pattern list",
+        },
+        exclude: {
+          invalid: "Exclude must be a glob pattern or glob pattern list",
+        },
       },
     },
   },
@@ -32,6 +40,8 @@ export const i18n = rosetta({
         language: "언어를 선택하세요",
         maxStatements: "한 파일에 허용할 최대 statement 수",
         maxFiles: "한 디렉터리에 허용할 최대 파일 수",
+        include: "추가로 포함할 glob 패턴",
+        exclude: "추가로 제외할 glob 패턴",
       },
       error: {
         language: {
@@ -46,6 +56,12 @@ export const i18n = rosetta({
           min: "최대 파일 수는 1개 이상이어야 합니다",
           max: "최대 파일 수는 100개를 초과할 수 없습니다",
           invalid: "최대 파일 수는 올바른 숫자 형식이어야 합니다",
+        },
+        include: {
+          invalid: "include는 glob 패턴 또는 glob 패턴 목록이어야 합니다",
+        },
+        exclude: {
+          invalid: "exclude는 glob 패턴 또는 glob 패턴 목록이어야 합니다",
         },
       },
     },

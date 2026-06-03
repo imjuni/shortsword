@@ -11,5 +11,8 @@ export function getShortswordZodErrorMap(): IErrorMappingTable {
     "max-files.too_small": "args.error.maxFiles.min",
     "max-files.too_big": "args.error.maxFiles.max",
     "max-files.invalid_type": "args.error.maxFiles.invalid",
+
+    "include.invalid_type": "args.error.include.invalid",
+    "exclude.invalid_type": "args.error.exclude.invalid",
   };
 }

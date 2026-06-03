@@ -23,6 +23,20 @@ export const shortswordArgs = {
       return i18n.t("args.description.maxFiles");
     },
   },
+  include: {
+    type: "string",
+    alias: "i",
+    get description() {
+      return i18n.t("args.description.include");
+    },
+  },
+  exclude: {
+    type: "string",
+    alias: "x",
+    get description() {
+      return i18n.t("args.description.exclude");
+    },
+  },
   project: {
     type: "string",
     alias: "p",

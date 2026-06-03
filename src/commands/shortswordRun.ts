@@ -11,12 +11,10 @@ import { loadArgs } from "#modules/args/loadArgs.js";
 import { countTopLevelDeclarations } from "#modules/compilers/countTopLevelDeclarations.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
 import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.js";
+import { filterFilePathsByGlob } from "#modules/paths/filterFilePathsByGlob.js";
 import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
 
-export const shortswordRun = async ({
-  args,
-  cmd,
-}: CommandContext<typeof shortswordArgs>) => {
+export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortswordArgs>) => {
   const locale = args.language ?? getLocale();
   i18n.locale(locale);
 
@@ -39,9 +37,16 @@ export const shortswordRun = async ({
   const rawFilePaths = tsProject
     .getSourceFiles()
     .map((sourceFile) => sourceFile.getFilePath().toString());
-  const filteredRawFilePaths = rawFilePaths.filter((filePath) =>
+  const descendantFilePaths = rawFilePaths.filter((filePath) =>
     isDescendant(tsconfigDir, filePath),
   );
+  const filteredRawFilePaths = await filterFilePathsByGlob({
+    rootDir: tsconfigDir,
+    filePaths: descendantFilePaths,
+    include: config.data.include,
+    exclude: config.data.exclude,
+  });
+  const filteredRawFilePathSet = new Set(filteredRawFilePaths);
   const dirPathMap = await getDirPathMap(filteredRawFilePaths);
   const caseMap = await buildCorrectCasePathMap(dirPathMap);
 
@@ -50,10 +55,13 @@ export const shortswordRun = async ({
   // path, so project.getSourceFile(correctedPath) can return null on
   // case-sensitive systems or strict ts-morph builds.
   const sourceFileMap = new Map<string, tsm.SourceFile>(
-    tsProject.getSourceFiles().map((sourceFile) => {
-      const original = sourceFile.getFilePath().toString();
-      return [caseMap.get(original) ?? original, sourceFile];
-    }),
+    tsProject
+      .getSourceFiles()
+      .filter((sourceFile) => filteredRawFilePathSet.has(sourceFile.getFilePath().toString()))
+      .map((sourceFile) => {
+        const original = sourceFile.getFilePath().toString();
+        return [caseMap.get(original) ?? original, sourceFile];
+      }),
   );
 
   const maxStatements = config.data["max-statements"];
