@@ -8,8 +8,8 @@ import type { shortswordArgs } from "#commands/shortswordArgs.js";
 import { getLocale } from "#i18n/getLocale.js";
 import { i18n } from "#i18n/i18n.js";
 import { loadArgs } from "#modules/args/loadArgs.js";
+import { countTopLevelDeclarations } from "#modules/compilers/countTopLevelDeclarations.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
-import { hasExactlyNDeclarations } from "#modules/compilers/hasExactlyNDeclarations.js";
 import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.js";
 import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
 
@@ -66,7 +66,7 @@ export const shortswordRun = async ({
   const statementCountViolations = Array.from(sourceFileMap.values())
     .map((sourceFile) => ({
       sourceFile,
-      statementCount: hasExactlyNDeclarations(sourceFile),
+      statementCount: countTopLevelDeclarations(sourceFile),
     }))
     .filter((entry) => entry.statementCount > maxStatements);
 

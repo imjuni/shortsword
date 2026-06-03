@@ -2,10 +2,10 @@ import { randomUUID } from "node:crypto";
 import pathe from "pathe";
 import type * as tsm from "ts-morph";
 import { beforeAll, describe, expect, it } from "vitest";
+import { countTopLevelDeclarations } from "#modules/compilers/countTopLevelDeclarations.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
-import { hasExactlyNDeclarations } from "#modules/compilers/hasExactlyNDeclarations.js";
 
-describe("hasExactlyNDeclarations", () => {
+describe("countTopLevelDeclarations", () => {
   let project: tsm.Project;
 
   beforeAll(() => {
@@ -32,7 +32,7 @@ export function hello(): Name {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile);
+    const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
   });
 
@@ -56,7 +56,7 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile);
+    const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
   });
 
@@ -78,7 +78,7 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile);
+    const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
   });
 
@@ -102,7 +102,7 @@ export function hello(): Person {
       sourceFileText.trim(),
     );
 
-    const result = hasExactlyNDeclarations(sourceFile);
+    const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(3);
   });
 });

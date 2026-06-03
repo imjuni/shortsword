@@ -1,7 +1,7 @@
 import consola from "consola";
 import { Node, type SourceFile } from "ts-morph";
 
-export function hasExactlyNDeclarations(sourceFile: SourceFile): number {
+export function countTopLevelDeclarations(sourceFile: SourceFile): number {
   // Read every top-level statement in the source file.
   const statements = sourceFile.getStatements();
 
