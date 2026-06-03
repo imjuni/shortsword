@@ -16,8 +16,9 @@
     "lint": "biome check .",
     "lint-staged": "biome check --write --staged --files-ignore-unknown=true --no-errors-on-unmatched",
     "build": "tsc --incremental --noEmit --project tsconfig.prod.json",
-    "rollup:prod": "rollup --config ./.configs/rollup.config.prod.ts --configPlugin typescript",
-    "rollup:dev": "rollup --config ./.configs/rollup.config.dev.ts --configPlugin typescript",
+    "pub": "pnpm run artifact && cross-env RELEASE_MODE=true pnpm publish --registry http://localhost:8901 --force",
+    "unpub": "pnpm unpublish $npm_package_name@$npm_package_version --registry http://localhost:8901 --force",
+    "pub:prod": "pnpm run artifact && cross-env RELEASE_MODE=true pnpm publish --access=public",
     "dd": "deps-diff md -d prod -d dev --title-list-type '*' --deps-list-type '*' --content-list-type '*'",
     "prepare": "husky install"
   },
@@ -57,7 +58,6 @@
     "esbuild": "^0.28.0",
     "execa": "^9.3.0",
     "husky": "^9.0.11",
-    "read-pkg": "^10.1.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.18.1",
     "rollup-plugin-dts": "^6.1.1",
@@ -78,14 +78,15 @@
     "my-easy-fp": "^0.23.0",
     "my-node-fp": "^0.10.3",
     "pathe": "^2.0.3",
+    "read-pkg": "^10.1.0",
     "rosetta": "^1.1.0",
     "source-map-support": "^0.5.21",
     "url-naong": "^1.3.0",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "typescript": "^6.0.3",
-    "ts-morph": "^28.0.0"
+    "ts-morph": "^28.0.0",
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
