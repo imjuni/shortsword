@@ -56,21 +56,24 @@ export const shortswordRun = async ({
     }),
   );
 
-  const fileCountExceedDetected = Array.from(dirPathMap.entries())
-    .map(([dirPath, filePaths]) => ({ dirPath, filePaths }))
-    .filter((entry) => entry.filePaths.length > config.data["dir-count"]);
+  const maxStatements = config.data["max-statements"];
+  const maxFiles = config.data["max-files"];
 
-  const statementDetected = Array.from(sourceFileMap.values())
+  const fileCountViolations = Array.from(dirPathMap.entries())
+    .map(([dirPath, filePaths]) => ({ dirPath, filePaths }))
+    .filter((entry) => entry.filePaths.length > maxFiles);
+
+  const statementCountViolations = Array.from(sourceFileMap.values())
     .map((sourceFile) => ({
       sourceFile,
-      declarations: hasExactlyNDeclarations(sourceFile),
+      statementCount: hasExactlyNDeclarations(sourceFile),
     }))
-    .filter((entry) => entry.declarations > config.data["file-count"]);
+    .filter((entry) => entry.statementCount > maxStatements);
 
-  if (fileCountExceedDetected.length > 0) {
+  if (fileCountViolations.length > 0) {
     consola.error("오류: ");
     console.log(
-      fileCountExceedDetected
+      fileCountViolations
         .map((fileCount) => {
           return `  ${chalk.red("✖")} "${fileCount.dirPath}" > ${fileCount.filePaths.length} files`;
         })
@@ -79,20 +82,20 @@ export const shortswordRun = async ({
     );
   }
 
-  if (statementDetected.length > 0) {
+  if (statementCountViolations.length > 0) {
     consola.error("오류: ");
 
     console.error(
-      statementDetected
+      statementCountViolations
         .map((statement) => {
-          return `  ${chalk.red("✖")} ${statement.sourceFile.getFilePath().toString()} > ${statement.declarations} statements`;
+          return `  ${chalk.red("✖")} ${statement.sourceFile.getFilePath().toString()} > ${statement.statementCount} statements`;
         })
         .join("\n"),
       "\n",
     );
   }
 
-  if (fileCountExceedDetected.length + statementDetected.length > 0) {
+  if (fileCountViolations.length + statementCountViolations.length > 0) {
     process.exit(1);
   } else {
     consola.success("오류 없음");

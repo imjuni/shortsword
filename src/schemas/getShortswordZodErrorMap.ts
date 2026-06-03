@@ -2,12 +2,12 @@ import type { IErrorMappingTable } from "#i18n/IErrorMappingTable.js";
 
 export function getShortswordZodErrorMap(): IErrorMappingTable {
   return {
-    "file-count.too_small": "args.error.fileCount.min",
-    "file-count.too_big": "args.error.fileCount.max",
-    "file-count.invalid_type": "args.error.fileCount.invalid",
+    "max-statements.too_small": "args.error.maxStatements.min",
+    "max-statements.too_big": "args.error.maxStatements.max",
+    "max-statements.invalid_type": "args.error.maxStatements.invalid",
 
-    "dir-count.too_small": "args.error.dirCount.min",
-    "dir-count.too_big": "args.error.dirCount.max",
-    "dir-count.invalid_type": "args.error.dirCount.invalid",
+    "max-files.too_small": "args.error.maxFiles.min",
+    "max-files.too_big": "args.error.maxFiles.max",
+    "max-files.invalid_type": "args.error.maxFiles.invalid",
   };
 }

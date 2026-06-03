@@ -10,18 +10,18 @@ export const shortswordArgs = {
       return i18n.t("args.description.language");
     },
   },
-  "file-count": {
+  "max-statements": {
+    type: "string",
+    alias: "s",
+    get description() {
+      return i18n.t("args.description.maxStatements");
+    },
+  },
+  "max-files": {
     type: "string",
     alias: "f",
     get description() {
-      return i18n.t("args.description.fileCount");
-    },
-  },
-  "dir-count": {
-    type: "string",
-    alias: "d",
-    get description() {
-      return i18n.t("args.description.dirCount");
+      return i18n.t("args.description.maxFiles");
     },
   },
   project: {
