@@ -1,12 +1,59 @@
-# TypeScript ESM cli boilerplate
+# Shortsword
 
-## installation
+Shortsword is a small tool designed to work alongside ESLint and Biome. It helps detect files with too much code or too many declarations, especially when AI-assisted coding adds many types, functions, or other declarations to a single file. It was built as a lightweight harness for SFSR-style constraints.
+
+Use `--max-statements` to set the maximum number of statements allowed in a file, and `--max-files` to set the maximum number of files allowed in a directory.
+
+Now use Shortsword and enjoy safer, happier coding.
+
+## Usage
 
 ```bash
-# Clone the boilerplate:
-git clone --depth=1 \
-  https://github.com/imjuni/typescript-cli-esm-boilerplate.git \
-  your-project-name
-
-cd your-project-name
+npx swd
 ```
+
+```bash
+npx swd -s 2 -f 10 -p ./tsconfig.json
+```
+
+## Options
+
+| Option | Alias | Default | Description |
+| --- | --- | ---: | --- |
+| `--max-statements` | `-s` | `2` | Maximum top-level statements allowed per file |
+| `--max-files` | `-f` | `10` | Maximum TypeScript files allowed per directory |
+| `--project` | `-p` | `./tsconfig.json` | Path to the `tsconfig.json` used to resolve target files |
+| `--language` | `-l` | auto-detected | Message language |
+
+## Installation
+
+```bash
+pnpm add -D shortsword typescript
+```
+
+```bash
+npm install -D shortsword typescript
+```
+
+## Requirements
+
+- Node.js >= 22
+- TypeScript >= 6
+
+### Configuration
+
+You can use a configuration file instead of CLI options. Shortsword reads configuration files such as `shortsword.config.ts`, `shortsword.config.js`, and `.shortswordrc`.
+
+```ts
+export default {
+  "max-statements": 2,
+  "max-files": 10,
+  project: "./tsconfig.json",
+};
+```
+
+CLI options take precedence when both CLI options and a configuration file are used.
+
+## License
+
+MIT
