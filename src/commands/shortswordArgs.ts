@@ -3,9 +3,8 @@ import { i18n } from "#i18n/i18n.js";
 
 export const shortswordArgs = {
   language: {
-    type: "enum",
+    type: "string",
     alias: "l",
-    options: ["ko", "en"],
     get description() {
       return i18n.t("args.description.language");
     },

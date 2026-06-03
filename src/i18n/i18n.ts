@@ -10,6 +10,9 @@ export const i18n = rosetta({
         project: "tsconfig.json 파일 경로",
       },
       error: {
+        language: {
+          invalid: "Language must be one of: ko, en",
+        },
         maxStatements: {
           min: "Maximum statements must be 1 or greater",
           max: "Maximum statements cannot exceed 10",
@@ -31,6 +34,9 @@ export const i18n = rosetta({
         maxFiles: "한 디렉터리에 허용할 최대 파일 수",
       },
       error: {
+        language: {
+          invalid: "언어는 ko 또는 en 중 하나여야 합니다",
+        },
         maxStatements: {
           min: "최대 statement 수는 1개 이상이어야 합니다",
           max: "최대 statement 수는 10개를 초과할 수 없습니다",
