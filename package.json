@@ -26,7 +26,21 @@
     "type": "git",
     "url": "git+https://github.com/imjuni/shortsword.git"
   },
-  "keywords": [],
+  "keywords": [
+    "shortsword",
+    "sfsr",
+    "ai",
+    "claude",
+    "harness",
+    "typescript",
+    "cli",
+    "static-analysis",
+    "code-quality",
+    "file-organization",
+    "architecture",
+    "lint",
+    "ai-coding"
+  ],
   "author": "ByungJoon Lee",
   "license": "MIT",
   "main": "dist/cli.js",
