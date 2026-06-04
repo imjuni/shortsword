@@ -40,6 +40,10 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   const descendantFilePaths = rawFilePaths.filter((filePath) =>
     isDescendant(tsconfigDir, filePath),
   );
+  // TypeScript already resolves tsconfig include/exclude when ts-morph builds
+  // the project. Shortsword's include/exclude options are intentionally applied
+  // after that step as an additional override for project-specific cases, such
+  // as legacy repositories that keep test files under __tests__ or __test__.
   const filteredRawFilePaths = await filterFilePathsByGlob({
     rootDir: tsconfigDir,
     filePaths: descendantFilePaths,

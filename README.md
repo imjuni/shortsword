@@ -13,7 +13,7 @@ npx swd
 ```
 
 ```bash
-npx swd -s 2 -f 10 -x "**/__tests__/**" -p ./tsconfig.json
+npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 ```
 
 ## Options
@@ -50,7 +50,7 @@ You can use a configuration file instead of CLI options. Shortsword reads config
 export default {
   "max-statements": 2,
   "max-files": 10,
-  exclude: ["**/__tests__/**", "**/__test__/**"],
+  exclude: ["**/*.test.ts", "**/__tests__/**", "**/__test__/**"],
   project: "./tsconfig.json",
 };
 ```

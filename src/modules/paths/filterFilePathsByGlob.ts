@@ -1,5 +1,5 @@
 import { glob } from "glob";
-import { replaceSepToPosix } from "my-node-fp";
+import pathe from "pathe";
 
 interface IFilterFilePathsByGlobParams {
   rootDir: string;
@@ -16,7 +16,7 @@ async function resolveGlobPathSet(rootDir: string, patterns: string[]): Promise<
     nodir: true,
   });
 
-  return new Set(matchedPaths.map((filePath) => replaceSepToPosix(filePath)));
+  return new Set(matchedPaths.map((filePath) => pathe.normalize(filePath)));
 }
 
 export async function filterFilePathsByGlob({
@@ -29,7 +29,10 @@ export async function filterFilePathsByGlob({
     return filePaths;
   }
 
-  const inputPathSet = new Set(filePaths.map((filePath) => replaceSepToPosix(filePath)));
+  // The incoming paths already come from ts-morph after TypeScript applied the
+  // tsconfig include/exclude rules. This function only applies Shortsword's
+  // extra include/exclude filters when the user explicitly provides them.
+  const inputPathSet = new Set(filePaths.map((filePath) => pathe.normalize(filePath)));
   let filteredPathSet = inputPathSet;
 
   if (include != null && include.length > 0) {
@@ -46,5 +49,5 @@ export async function filterFilePathsByGlob({
     );
   }
 
-  return filePaths.filter((filePath) => filteredPathSet.has(replaceSepToPosix(filePath)));
+  return filePaths.filter((filePath) => filteredPathSet.has(pathe.normalize(filePath)));
 }

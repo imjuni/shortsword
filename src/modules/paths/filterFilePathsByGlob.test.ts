@@ -20,6 +20,7 @@ describe("filterFilePathsByGlob", () => {
 
     filePaths = [
       pathe.join(rootDir, "src", "index.ts"),
+      pathe.join(rootDir, "src", "index.test.ts"),
       pathe.join(rootDir, "src", "__tests__", "index.test.ts"),
       pathe.join(rootDir, "src", "features", "feature.ts"),
     ];
@@ -52,6 +53,20 @@ describe("filterFilePathsByGlob", () => {
       rootDir,
       filePaths,
       exclude: ["**/__tests__/**"],
+    });
+
+    expect(result).toEqual([
+      pathe.join(rootDir, "src", "index.ts"),
+      pathe.join(rootDir, "src", "index.test.ts"),
+      pathe.join(rootDir, "src", "features", "feature.ts"),
+    ]);
+  });
+
+  it("should remove sibling test files when test file exclude is provided", async () => {
+    const result = await filterFilePathsByGlob({
+      rootDir,
+      filePaths,
+      exclude: ["**/*.test.ts"],
     });
 
     expect(result).toEqual([
