@@ -4,6 +4,24 @@ Shortsword is a small tool designed to work alongside ESLint and Biome. It helps
 
 Use `--max-statements` to set the maximum number of statements allowed in a file, and `--max-files` to set the maximum number of files allowed in a directory.
 
+Before:
+
+```text
+src/user.ts > 12 statements
+src/features > 24 files
+```
+
+After:
+
+```text
+src/user/createUser.ts > 2 statements
+src/user/updateUser.ts > 2 statements
+src/user/deleteUser.ts > 2 statements
+src/features/user > 8 files
+src/features/auth > 6 files
+src/features/billing > 5 files
+```
+
 Now use Shortsword and enjoy safer, happier coding.
 
 ## Usage

@@ -1,7 +1,7 @@
 {
   "name": "shortsword",
   "version": "0.1.0",
-  "description": "Detect not follow SFSR, too many file in directory",
+  "description": "Enforce SFSR constraints for AI-assisted TypeScript codebases",
   "type": "module",
   "engines": {
     "node": ">=22"
