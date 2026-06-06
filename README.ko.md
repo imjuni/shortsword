@@ -1,5 +1,14 @@
 # Shortsword
 
+![ts](https://flat.badgen.net/badge/Built%20With/TypeScript/blue)
+[![Download Status](https://img.shields.io/npm/dw/shortsword.svg)](https://npmcharts.com/compare/shortsword?minimal=true)
+[![Github Star](https://img.shields.io/github/stars/imjuni/shortsword.svg?style=popout)](https://github.com/imjuni/shortsword)
+[![Github Issues](https://img.shields.io/github/issues-raw/imjuni/shortsword.svg)](https://github.com/imjuni/shortsword/issues)
+[![NPM version](https://img.shields.io/npm/v/shortsword.svg)](https://www.npmjs.com/package/shortsword)
+[![License](https://img.shields.io/npm/l/shortsword.svg)](https://github.com/imjuni/shortsword/blob/master/LICENSE)
+[![ci](https://github.com/imjuni/shortsword/actions/workflows/ci.yml/badge.svg)](https://github.com/imjuni/shortsword/actions/workflows/ci.yml)
+[![code style: biome](https://img.shields.io/badge/code_style-biome-60a5fa.svg?style=flat-square)](https://biomejs.dev)
+
 Shortsword는 ESLint, Biome과 같이 사용하는 간단한 도구입니다. 한 파일에 많은 코드를 추가하거나 수십 개의 선언을 추가하는 경우 이를 탐지할 수 있는 방법이 있으면 좋을 것 같아서 만들게 되었습니다. 특히 AI를 사용하여 코딩할 때 한 파일에 수십 개의 타입, 함수 등을 추가하는 경우를 보고 규칙을 작성했지만 컨텍스트 이슈로 인해서 이 규칙을 종종 무시하는 경우를 보고 harness로 동작할 수 있는 간단한 도구가 필요하겠다고 생각해서 작성하게 되었습니다.
 
 `--max-statements` 옵션을 사용하여 한 파일에 선언 가능한 최대 statement 개수를 설정할 수 있고, `--max-files`를 사용하여 한 디렉터리에 최대 몇 개까지 파일을 추가할 수 있는지 설정할 수 있습니다.

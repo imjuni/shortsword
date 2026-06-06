@@ -1,5 +1,14 @@
 # Shortsword
 
+![ts](https://flat.badgen.net/badge/Built%20With/TypeScript/blue)
+[![Download Status](https://img.shields.io/npm/dw/shortsword.svg)](https://npmcharts.com/compare/shortsword?minimal=true)
+[![Github Star](https://img.shields.io/github/stars/imjuni/shortsword.svg?style=popout)](https://github.com/imjuni/shortsword)
+[![Github Issues](https://img.shields.io/github/issues-raw/imjuni/shortsword.svg)](https://github.com/imjuni/shortsword/issues)
+[![NPM version](https://img.shields.io/npm/v/shortsword.svg)](https://www.npmjs.com/package/shortsword)
+[![License](https://img.shields.io/npm/l/shortsword.svg)](https://github.com/imjuni/shortsword/blob/master/LICENSE)
+[![ci](https://github.com/imjuni/shortsword/actions/workflows/ci.yml/badge.svg)](https://github.com/imjuni/shortsword/actions/workflows/ci.yml)
+[![code style: biome](https://img.shields.io/badge/code_style-biome-60a5fa.svg?style=flat-square)](https://biomejs.dev)
+
 Shortsword is a small tool designed to work alongside ESLint and Biome. It helps detect files with too much code or too many declarations, especially when AI-assisted coding adds many types, functions, or other declarations to a single file. It was built as a lightweight harness for SFSR-style constraints.
 
 Use `--max-statements` to set the maximum number of statements allowed in a file, and `--max-files` to set the maximum number of files allowed in a directory.
