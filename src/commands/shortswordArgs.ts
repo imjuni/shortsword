@@ -37,6 +37,13 @@ export const shortswordArgs = {
       return i18n.t("args.description.exclude");
     },
   },
+  verbose: {
+    type: "boolean",
+    alias: "v",
+    get description() {
+      return i18n.t("args.description.verbose");
+    },
+  },
   project: {
     type: "string",
     alias: "p",

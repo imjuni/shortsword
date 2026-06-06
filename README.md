@@ -44,6 +44,7 @@ npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 | `--exclude` | `-x` | - | Additional exclude glob patterns |
 | `--project` | `-p` | `./tsconfig.json` | Path to the `tsconfig.json` used to resolve target files |
 | `--language` | `-l` | auto-detected | Message language |
+| `--verbose` | `-v` | `false` | Show debug logs |
 
 ## Installation
 

@@ -44,6 +44,7 @@ npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 | `--exclude` | `-x` | - | 추가로 제외할 glob 패턴 |
 | `--project` | `-p` | `./tsconfig.json` | `tsconfig.json` 경로. 검사 대상 파일을 tsconfig.json 기준으로 자동 적용 |
 | `--language` | `-l` | 자동 감지 | 메시지 언어 |
+| `--verbose` | `-v` | `false` | 디버그 로그 출력 |
 
 ## Installation
 

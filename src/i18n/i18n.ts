@@ -9,6 +9,7 @@ export const i18n = rosetta({
         maxFiles: "Maximum files allowed per directory",
         include: "Additional include glob patterns",
         exclude: "Additional exclude glob patterns",
+        verbose: "Show debug logs",
         project: "tsconfig.json 파일 경로",
       },
       error: {
@@ -42,6 +43,7 @@ export const i18n = rosetta({
         maxFiles: "한 디렉터리에 허용할 최대 파일 수",
         include: "추가로 포함할 glob 패턴",
         exclude: "추가로 제외할 glob 패턴",
+        verbose: "디버그 로그 출력",
       },
       error: {
         language: {

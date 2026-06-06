@@ -14,10 +14,7 @@ import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.
 import { filterFilePathsByGlob } from "#modules/paths/filterFilePathsByGlob.js";
 import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
 
-export const shortswordRun = async ({
-  args,
-  cmd,
-}: CommandContext<typeof shortswordArgs>) => {
+export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortswordArgs>) => {
   const locale = args.language ?? getLocale();
   i18n.locale(locale);
 
@@ -25,6 +22,7 @@ export const shortswordRun = async ({
 
   // Validation configuration after loading configuration and args
   const config = await loadArgs(args, cmd);
+  consola.level = config.data.verbose ? 4 : consola.level;
 
   // Use an absolute tsconfig path because ts-morph returns absolute source file
   // paths. Keeping both sides absolute avoids descendant checks drifting when
@@ -32,9 +30,17 @@ export const shortswordRun = async ({
   const tsconfigPath = pathe.resolve(config.data.project);
   const tsconfigDir = pathe.dirname(tsconfigPath);
 
-  consola.debug("tsconfig: ", tsconfigDir, tsconfigPath);
+  consola.debug("Resolved config", {
+    exclude: config.data.exclude,
+    include: config.data.include,
+    maxFiles: config.data["max-files"],
+    maxStatements: config.data["max-statements"],
+    project: tsconfigPath,
+    tsconfigDir,
+  });
 
   // read TypeScript project
+  consola.debug("Loading TypeScript project", { tsconfigPath });
   const tsProject = getTypeScriptProject({
     tsConfigFilePath: tsconfigPath,
   });
@@ -43,22 +49,41 @@ export const shortswordRun = async ({
   const rawFilePaths = tsProject
     .getSourceFiles()
     .map((sourceFile) => sourceFile.getFilePath().toString());
+  consola.debug("Loaded source files", { count: rawFilePaths.length });
+
   const descendantFilePaths = rawFilePaths.filter((filePath) =>
     isDescendant(tsconfigDir, filePath),
   );
+  consola.debug("Filtered source files by tsconfig directory", {
+    count: descendantFilePaths.length,
+    excluded: rawFilePaths.length - descendantFilePaths.length,
+  });
+
   // TypeScript already resolves tsconfig include/exclude when ts-morph builds
   // the project. Shortsword's include/exclude options are intentionally applied
   // after that step as an additional override for project-specific cases, such
   // as legacy repositories that keep test files under __tests__ or __test__.
+  consola.debug("Applying Shortsword include/exclude filters", {
+    exclude: config.data.exclude,
+    include: config.data.include,
+  });
   const filteredRawFilePaths = await filterFilePathsByGlob({
     rootDir: tsconfigDir,
     filePaths: descendantFilePaths,
     include: config.data.include,
     exclude: config.data.exclude,
   });
+  consola.debug("Filtered source files by Shortsword options", {
+    count: filteredRawFilePaths.length,
+    excluded: descendantFilePaths.length - filteredRawFilePaths.length,
+  });
+
   const filteredRawFilePathSet = new Set(filteredRawFilePaths);
   const dirPathMap = await getDirPathMap(filteredRawFilePaths);
+  consola.debug("Built directory path map", { count: dirPathMap.size });
+
   const caseMap = await buildCorrectCasePathMap(dirPathMap);
+  consola.debug("Built correct-case path map", { count: caseMap.size });
 
   // Build correctedPath → SourceFile map so lookups remain correct after case
   // correction. ts-morph registers files by their original (possibly wrong-cased)
@@ -67,14 +92,13 @@ export const shortswordRun = async ({
   const sourceFileMap = new Map<string, tsm.SourceFile>(
     tsProject
       .getSourceFiles()
-      .filter((sourceFile) =>
-        filteredRawFilePathSet.has(sourceFile.getFilePath().toString()),
-      )
+      .filter((sourceFile) => filteredRawFilePathSet.has(sourceFile.getFilePath().toString()))
       .map((sourceFile) => {
         const original = sourceFile.getFilePath().toString();
         return [caseMap.get(original) ?? original, sourceFile];
       }),
   );
+  consola.debug("Built source file map", { count: sourceFileMap.size });
 
   const maxStatements = config.data["max-statements"];
   const maxFiles = config.data["max-files"];
@@ -82,6 +106,9 @@ export const shortswordRun = async ({
   const fileCountViolations = Array.from(dirPathMap.entries())
     .map(([dirPath, filePaths]) => ({ dirPath, filePaths }))
     .filter((entry) => entry.filePaths.length > maxFiles);
+  consola.debug("Detected file count violations", {
+    count: fileCountViolations.length,
+  });
 
   const statementCountViolations = Array.from(sourceFileMap.values())
     .map((sourceFile) => ({
@@ -89,6 +116,9 @@ export const shortswordRun = async ({
       statementCount: countTopLevelDeclarations(sourceFile),
     }))
     .filter((entry) => entry.statementCount > maxStatements);
+  consola.debug("Detected statement count violations", {
+    count: statementCountViolations.length,
+  });
 
   if (fileCountViolations.length > 0) {
     consola.error("오류: ");

@@ -33,5 +33,6 @@ export const shortswordArgsZod = z.object({
   "max-files": z.coerce.number().min(1).max(100).default(10),
   include: globPatternsZod,
   exclude: globPatternsZod,
+  verbose: z.boolean().default(false),
   project: z.string().default(pathe.join(process.cwd(), "tsconfig.json")),
 });
