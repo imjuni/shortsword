@@ -78,7 +78,11 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     excluded: descendantFilePaths.length - filteredRawFilePaths.length,
   });
 
-  const filteredRawFilePathSet = new Set(filteredRawFilePaths);
+  const filteredRawFilePathSet = new Set(
+    filteredRawFilePaths.map((filePath) => pathe.normalize(filePath)),
+  );
+  const isIncludedFilePath = (filePath: string) =>
+    filteredRawFilePathSet.has(pathe.normalize(filePath));
   const dirPathMap = await getDirPathMap(filteredRawFilePaths);
   consola.debug("Built directory path map", { count: dirPathMap.size });
 
@@ -92,7 +96,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   const sourceFileMap = new Map<string, tsm.SourceFile>(
     tsProject
       .getSourceFiles()
-      .filter((sourceFile) => filteredRawFilePathSet.has(sourceFile.getFilePath().toString()))
+      .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
       .map((sourceFile) => {
         const original = sourceFile.getFilePath().toString();
         return [caseMap.get(original) ?? original, sourceFile];
@@ -104,13 +108,26 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   const maxFiles = config.data["max-files"];
 
   const fileCountViolations = Array.from(dirPathMap.entries())
-    .map(([dirPath, filePaths]) => ({ dirPath, filePaths }))
+    .map(([dirPath, filePaths]) => ({
+      dirPath,
+      // getDirPathMap reads the real directory entries for case checking and
+      // max-files detection. Apply the Shortsword include/exclude result here
+      // so excluded files, such as *.test.ts, do not count toward max-files.
+      filePaths: filePaths.filter((filePath) =>
+        isIncludedFilePath(pathe.resolve(dirPath, filePath)),
+      ),
+    }))
     .filter((entry) => entry.filePaths.length > maxFiles);
   consola.debug("Detected file count violations", {
     count: fileCountViolations.length,
   });
 
   const statementCountViolations = Array.from(sourceFileMap.values())
+    // Keep the statement check on the same include/exclude-filtered file set as
+    // max-files. This is intentionally repeated at the violation stage so
+    // future changes to sourceFileMap construction cannot reintroduce excluded
+    // files into statement counting.
+    .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
     .map((sourceFile) => ({
       sourceFile,
       statementCount: countTopLevelDeclarations(sourceFile),
