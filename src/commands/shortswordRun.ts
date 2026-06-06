@@ -9,6 +9,7 @@ import { getLocale } from "#i18n/getLocale.js";
 import { i18n } from "#i18n/i18n.js";
 import { loadArgs } from "#modules/args/loadArgs.js";
 import { countTopLevelDeclarations } from "#modules/compilers/countTopLevelDeclarations.js";
+import { findRelativeImports } from "#modules/compilers/findRelativeImports.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
 import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.js";
 import { filterFilePathsByGlob } from "#modules/paths/filterFilePathsByGlob.js";
@@ -37,6 +38,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     maxStatements: config.data["max-statements"],
     project: tsconfigPath,
     tsconfigDir,
+    useAbsPath: config.data["use-abs-path"],
   });
 
   // read TypeScript project
@@ -137,6 +139,22 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     count: statementCountViolations.length,
   });
 
+  const relativeImportViolations = config.data["use-abs-path"]
+    ? Array.from(sourceFileMap.values())
+        // Keep the import check on the same include/exclude-filtered file set as
+        // other checks.
+        .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
+        .map((sourceFile) => ({
+          relativeImports: findRelativeImports(sourceFile),
+          sourceFile,
+        }))
+        .filter((entry) => entry.relativeImports.length > 0)
+    : [];
+  consola.debug("Detected relative import violations", {
+    count: relativeImportViolations.length,
+    enabled: config.data["use-abs-path"],
+  });
+
   if (fileCountViolations.length > 0) {
     consola.error("오류: ");
     console.log(
@@ -162,7 +180,25 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     );
   }
 
-  if (fileCountViolations.length + statementCountViolations.length > 0) {
+  if (relativeImportViolations.length > 0) {
+    consola.error("오류: ");
+
+    console.error(
+      relativeImportViolations
+        .flatMap((entry) =>
+          entry.relativeImports.map((relativeImport) => {
+            return `  ${chalk.red("✖")} ${entry.sourceFile.getFilePath().toString()}:${relativeImport.line} > ${relativeImport.specifier}`;
+          }),
+        )
+        .join("\n"),
+      "\n",
+    );
+  }
+
+  if (
+    fileCountViolations.length + statementCountViolations.length + relativeImportViolations.length >
+    0
+  ) {
     process.exit(1);
   } else {
     consola.success("오류 없음");

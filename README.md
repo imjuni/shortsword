@@ -11,7 +11,7 @@
 
 Shortsword is a small tool designed to work alongside ESLint and Biome. It helps detect files with too much code or too many declarations, especially when AI-assisted coding adds many types, functions, or other declarations to a single file. It was built as a lightweight harness for SFSR-style constraints.
 
-Use `--max-statements` to set the maximum number of statements allowed in a file, and `--max-files` to set the maximum number of files allowed in a directory.
+Use `--max-statements` to set the maximum number of statements allowed in a file, and `--max-files` to set the maximum number of files allowed in a directory. With `--use-abs-path`, Shortsword also detects relative imports so source files prefer path aliases or package subpath imports.
 
 Before:
 
@@ -49,6 +49,7 @@ npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 | --- | --- | ---: | --- |
 | `--max-statements` | `-s` | `2` | Maximum top-level statements allowed per file |
 | `--max-files` | `-f` | `10` | Maximum TypeScript files allowed per directory |
+| `--use-abs-path` | - | `false` | Detect relative imports and prefer path alias or subpath imports |
 | `--include` | `-i` | - | Additional include glob patterns |
 | `--exclude` | `-x` | - | Additional exclude glob patterns |
 | `--project` | `-p` | `./tsconfig.json` | Path to the `tsconfig.json` used to resolve target files |
@@ -78,6 +79,7 @@ You can use a configuration file instead of CLI options. Shortsword reads config
 export default {
   "max-statements": 2,
   "max-files": 10,
+  "use-abs-path": false,
   exclude: ["**/*.test.ts", "**/__tests__/**", "**/__test__/**"],
   project: "./tsconfig.json",
 };

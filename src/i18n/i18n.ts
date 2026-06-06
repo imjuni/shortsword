@@ -9,6 +9,7 @@ export const i18n = rosetta({
         maxFiles: "Maximum files allowed per directory",
         include: "Additional include glob patterns",
         exclude: "Additional exclude glob patterns",
+        useAbsPath: "Require path alias or subpath imports instead of relative imports",
         verbose: "Show debug logs",
         project: "tsconfig.json 파일 경로",
       },
@@ -43,6 +44,7 @@ export const i18n = rosetta({
         maxFiles: "한 디렉터리에 허용할 최대 파일 수",
         include: "추가로 포함할 glob 패턴",
         exclude: "추가로 제외할 glob 패턴",
+        useAbsPath: "상대 경로 import 대신 path alias 또는 subpath import 사용 검사",
         verbose: "디버그 로그 출력",
       },
       error: {
