@@ -60,6 +60,38 @@ export function hello(): Person {
     expect(result).toBe(2);
   });
 
+  it("should return 4 when source file has interface and function declarations", () => {
+    const filename = randomUUID().replaceAll("-", "");
+    const sourceFileText = `
+import pathe from 'pathe';
+
+interface Person {
+  name: string
+}
+
+export interface Job {
+  name: string
+}
+
+export interface Major {
+  name: string
+}
+
+export function hello(): Person {
+  console.log('hello');
+
+  return { name: 'hello' };
+}
+    `;
+    const sourceFile = project.createSourceFile(
+      `/hello/${filename}.ts`,
+      sourceFileText.trim(),
+    );
+
+    const result = countTopLevelDeclarations(sourceFile);
+    expect(result).toBe(4);
+  });
+
   it("should return 2 when source file has variable and function declarations", () => {
     const filename = randomUUID().replaceAll("-", "");
     const sourceFileText = `

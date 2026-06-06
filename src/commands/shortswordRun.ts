@@ -14,7 +14,10 @@ import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.
 import { filterFilePathsByGlob } from "#modules/paths/filterFilePathsByGlob.js";
 import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
 
-export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortswordArgs>) => {
+export const shortswordRun = async ({
+  args,
+  cmd,
+}: CommandContext<typeof shortswordArgs>) => {
   const locale = args.language ?? getLocale();
   i18n.locale(locale);
 
@@ -23,14 +26,17 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   // Validation configuration after loading configuration and args
   const config = await loadArgs(args, cmd);
 
-  // read tsconfig.json
-  const tsconfigDir = pathe.dirname(config.data.project);
+  // Use an absolute tsconfig path because ts-morph returns absolute source file
+  // paths. Keeping both sides absolute avoids descendant checks drifting when
+  // the project option is passed as a relative path.
+  const tsconfigPath = pathe.resolve(config.data.project);
+  const tsconfigDir = pathe.dirname(tsconfigPath);
 
-  consola.debug("tsconfig: ", tsconfigDir, config.data.project);
+  consola.debug("tsconfig: ", tsconfigDir, tsconfigPath);
 
   // read TypeScript project
   const tsProject = getTypeScriptProject({
-    tsConfigFilePath: config.data.project,
+    tsConfigFilePath: tsconfigPath,
   });
 
   // Get valid filePaths
@@ -61,7 +67,9 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   const sourceFileMap = new Map<string, tsm.SourceFile>(
     tsProject
       .getSourceFiles()
-      .filter((sourceFile) => filteredRawFilePathSet.has(sourceFile.getFilePath().toString()))
+      .filter((sourceFile) =>
+        filteredRawFilePathSet.has(sourceFile.getFilePath().toString()),
+      )
       .map((sourceFile) => {
         const original = sourceFile.getFilePath().toString();
         return [caseMap.get(original) ?? original, sourceFile];
