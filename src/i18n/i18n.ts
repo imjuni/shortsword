@@ -34,6 +34,12 @@ export const i18n = rosetta({
           invalid: "Exclude must be a glob pattern or glob pattern list",
         },
       },
+      violation: {
+        fileCount: "Too many files in one directory.",
+        relativeImport:
+          "Relative imports are not allowed. Use a path alias or package subpath import.",
+        statementCount: "Too many top-level statements in one file.",
+      },
     },
   },
   ko: {
@@ -67,6 +73,12 @@ export const i18n = rosetta({
         exclude: {
           invalid: "exclude는 glob 패턴 또는 glob 패턴 목록이어야 합니다",
         },
+      },
+      violation: {
+        fileCount: "한 디렉터리에 파일이 너무 많습니다.",
+        relativeImport:
+          "상대 경로 import를 사용했습니다. path alias 또는 package subpath import를 사용하세요.",
+        statementCount: "한 파일에 top-level statement가 너무 많습니다.",
       },
     },
   },
