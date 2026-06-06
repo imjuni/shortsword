@@ -157,7 +157,9 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
 
   if (fileCountViolations.length > 0) {
     consola.error("오류: ");
-    console.log(
+
+    console.error(`  ${chalk.red("✖")} ${i18n.t("args.violation.fileCount")}`);
+    console.error(
       fileCountViolations
         .map((fileCount) => {
           return `  ${chalk.red("✖")} "${fileCount.dirPath}" > ${fileCount.filePaths.length} files`;
@@ -170,6 +172,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   if (statementCountViolations.length > 0) {
     consola.error("오류: ");
 
+    console.error(`  ${chalk.red("✖")} ${i18n.t("args.violation.statementCount")}`);
     console.error(
       statementCountViolations
         .map((statement) => {
@@ -183,6 +186,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   if (relativeImportViolations.length > 0) {
     consola.error("오류: ");
 
+    console.error(`  ${chalk.red("✖")} ${i18n.t("args.violation.relativeImport")}`);
     console.error(
       relativeImportViolations
         .flatMap((entry) =>
