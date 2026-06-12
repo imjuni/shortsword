@@ -14,12 +14,7 @@ import { shortswordArgsZod } from "#schemas/shortswordArgsZod.js";
 export async function loadArgs(
   args: CommandContext<typeof shortswordArgs>["args"],
   cmd: CommandContext<typeof shortswordArgs>["cmd"],
-): Promise<
-  Exclude<
-    z.ZodSafeParseResult<z.infer<typeof shortswordArgsZod>>,
-    { success: false }
-  >
-> {
+): Promise<Exclude<z.ZodSafeParseResult<z.infer<typeof shortswordArgsZod>>, { success: false }>> {
   // load configuration file from the .shortswordrc, shortsword.config.ts, etc
   const { config: fileConfig } = await loadConfig({ name: "shortsword" });
   const rawConfig = defu(args, fileConfig);

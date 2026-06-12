@@ -27,10 +27,7 @@ export function hello(): Name {
   return 'hello';
 }
     `;
-    const sourceFile = project.createSourceFile(
-      `/hello/${filename}.ts`,
-      sourceFileText.trim(),
-    );
+    const sourceFile = project.createSourceFile(`/hello/${filename}.ts`, sourceFileText.trim());
 
     const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
@@ -51,10 +48,7 @@ export function hello(): Person {
   return { name: 'hello' };
 }
     `;
-    const sourceFile = project.createSourceFile(
-      `/hello/${filename}.ts`,
-      sourceFileText.trim(),
-    );
+    const sourceFile = project.createSourceFile(`/hello/${filename}.ts`, sourceFileText.trim());
 
     const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
@@ -83,10 +77,7 @@ export function hello(): Person {
   return { name: 'hello' };
 }
     `;
-    const sourceFile = project.createSourceFile(
-      `/hello/${filename}.ts`,
-      sourceFileText.trim(),
-    );
+    const sourceFile = project.createSourceFile(`/hello/${filename}.ts`, sourceFileText.trim());
 
     const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(4);
@@ -105,10 +96,7 @@ export function hello(): Person {
   return { name };
 }
     `;
-    const sourceFile = project.createSourceFile(
-      `/hello/${filename}.ts`,
-      sourceFileText.trim(),
-    );
+    const sourceFile = project.createSourceFile(`/hello/${filename}.ts`, sourceFileText.trim());
 
     const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(2);
@@ -129,10 +117,7 @@ export function hello(): Person {
   return { name, age };
 }
     `;
-    const sourceFile = project.createSourceFile(
-      `/hello/${filename}.ts`,
-      sourceFileText.trim(),
-    );
+    const sourceFile = project.createSourceFile(`/hello/${filename}.ts`, sourceFileText.trim());
 
     const result = countTopLevelDeclarations(sourceFile);
     expect(result).toBe(3);

@@ -6,10 +6,7 @@ import { i18n } from "#i18n/i18n.js";
 /**
  * Zod v4의 prettifyError 레이아웃을 그대로 재현하면서 다국어 번역을 입히는 함수
  */
-export function prettifyI18nError(
-  error: z.ZodError,
-  mappings: IErrorMappingTable,
-): string {
+export function prettifyI18nError(error: z.ZodError, mappings: IErrorMappingTable): string {
   const lines: string[] = [];
 
   for (const issue of error.issues) {

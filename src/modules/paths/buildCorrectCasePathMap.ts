@@ -1,6 +1,3 @@
-/* eslint-disable no-continue */
-
-import fs from "node:fs";
 import os from "node:os";
 import chalk from "chalk";
 import { replaceSepToPosix } from "my-node-fp";
@@ -74,12 +71,9 @@ export async function buildCorrectCasePathMap(
     // Map each input path to its correctly-cased filesystem counterpart.
     for (const inputPath of pathsInDir) {
       const basename = pathe.basename(inputPath);
-      const correctEntry = entries.find(
-        (entry) => entry.toLowerCase() === basename.toLowerCase(),
-      );
+      const correctEntry = entries.find((entry) => entry.toLowerCase() === basename.toLowerCase());
 
-      const correctedPath =
-        correctEntry != null ? pathe.join(dir, correctEntry) : inputPath;
+      const correctedPath = correctEntry != null ? pathe.join(dir, correctEntry) : inputPath;
 
       resultMap.set(inputPath, replaceSepToPosix(correctedPath));
     }

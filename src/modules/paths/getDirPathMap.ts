@@ -2,9 +2,7 @@ import pathe from "pathe";
 import { safeReaddir } from "#modules/paths/safeReaddir.js";
 import { TS_EXTENSIONS } from "#modules/paths/TS_EXTENSIONS.js";
 
-export async function getDirPathMap(
-  filePaths: string[],
-): Promise<Map<string, string[]>> {
+export async function getDirPathMap(filePaths: string[]): Promise<Map<string, string[]>> {
   const dirMap = new Map<string, string[]>();
   const dirInFilesMap = new Map<string, string[]>();
 
@@ -24,9 +22,7 @@ export async function getDirPathMap(
   await Promise.all(
     Array.from(dirMap.keys()).map(async (dirPath) => {
       const { dir, entries } = await safeReaddir(dirPath);
-      const filteredEntries = entries.filter((entry) =>
-        TS_EXTENSIONS.has(pathe.extname(entry)),
-      );
+      const filteredEntries = entries.filter((entry) => TS_EXTENSIONS.has(pathe.extname(entry)));
 
       dirInFilesMap.set(dir, filteredEntries);
     }),

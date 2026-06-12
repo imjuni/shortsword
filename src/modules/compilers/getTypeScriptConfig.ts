@@ -16,10 +16,7 @@ export function getTypeScriptConfig(project: string): tsm.ts.ParsedCommandLine {
     useCaseSensitiveFileNames: true,
   };
 
-  const configFile = tsm.ts.readConfigFile(
-    resolvedProjectPath,
-    tsm.ts.sys.readFile.bind(tsm.ts),
-  );
+  const configFile = tsm.ts.readConfigFile(resolvedProjectPath, tsm.ts.sys.readFile.bind(tsm.ts));
 
   const tsconfig = tsm.ts.parseJsonConfigFileContent(
     configFile.config,

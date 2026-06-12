@@ -12,9 +12,7 @@ export function countTopLevelDeclarations(sourceFile: SourceFile): number {
     return true;
   }).length;
 
-  consola.debug(
-    `[${sourceFile.getFilePath().toString()}] declaration count: ${declarationCount}`,
-  );
+  consola.debug(`[${sourceFile.getFilePath().toString()}] declaration count: ${declarationCount}`);
 
   return declarationCount;
 }
