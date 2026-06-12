@@ -14,5 +14,6 @@ export function getShortswordZodErrorMap(): IErrorMappingTable {
 
     "include.invalid_type": "args.error.include.invalid",
     "exclude.invalid_type": "args.error.exclude.invalid",
+    "overrides.invalid_type": "args.error.overrides.invalid",
   };
 }
