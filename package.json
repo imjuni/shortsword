@@ -13,13 +13,15 @@
     "artifact": "cross-env FORMAT=esm node .configs/esbuild.mjs",
     "test": "vitest run --coverage",
     "clean": "rimraf dist artifact",
-    "lint": "biome check .",
-    "lint-staged": "biome check --write --staged --files-ignore-unknown=true --no-errors-on-unmatched",
+    "check": "biome check .",
+    "check:write": "biome check . --write",
+    "check-staged": "biome check --write --staged --files-ignore-unknown=true --no-errors-on-unmatched",
     "build": "tsc --incremental --noEmit --project tsconfig.prod.json",
     "pub": "pnpm run artifact && cross-env RELEASE_MODE=true pnpm publish --registry http://localhost:8901 --force",
     "unpub": "pnpm unpublish $npm_package_name@$npm_package_version --registry http://localhost:8901 --force",
     "pub:prod": "pnpm run artifact && cross-env RELEASE_MODE=true pnpm publish --access=public",
     "dd": "deps-diff md -d prod -d dev --title-list-type '*' --deps-list-type '*' --content-list-type '*'",
+    "pre-commit": "cross-env NODE_ENV=production concurrently --group \"pnpm run check:write\" \"pnpm run build\"",
     "prepare": "husky install"
   },
   "repository": {
@@ -67,6 +69,7 @@
     "@types/source-map-support": "^0.5.10",
     "@types/yargs": "^17.0.31",
     "@vitest/coverage-v8": "^4.1.7",
+    "concurrently": "^10.0.3",
     "cross-env": "^10.1.0",
     "deps-diff": "^1.0.2",
     "esbuild": "^0.28.0",
@@ -104,10 +107,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "cross-env NODE_ENV=production eslint --cache"
-    ],
-    "*.{js,jsx,ts,tsx},*.json,.{eslintrc.cjs,prettierrc}": [
-      "cross-env NODE_ENV=production prettier --ignore-path .eslintignore --parser json --write"
+      "cross-env NODE_ENV=production pnpm run check:write"
     ]
   }
 }
