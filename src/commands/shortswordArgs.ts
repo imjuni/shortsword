@@ -37,6 +37,12 @@ export const shortswordArgs = {
       return i18n.t("args.description.exclude");
     },
   },
+  overrides: {
+    type: "string",
+    get description() {
+      return i18n.t("args.description.overrides");
+    },
+  },
   "use-abs-path": {
     type: "boolean",
     get description() {
