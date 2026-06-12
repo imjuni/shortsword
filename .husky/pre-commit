@@ -1,0 +1,5 @@
+if command -v mise >/dev/null 2>&1; then
+  MISE_DISABLE_UPDATE_CHECK=1 mise exec -- pnpm run pre-commit
+else
+  pnpm run pre-commit
+fi
