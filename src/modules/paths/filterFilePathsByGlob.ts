@@ -1,13 +1,6 @@
 import { glob } from "glob";
 import pathe from "pathe";
 
-interface IFilterFilePathsByGlobParams {
-  rootDir: string;
-  filePaths: string[];
-  include?: string[];
-  exclude?: string[];
-}
-
 async function resolveGlobPathSet(rootDir: string, patterns: string[]): Promise<Set<string>> {
   const matchedPaths = await glob(patterns, {
     absolute: true,
@@ -24,7 +17,12 @@ export async function filterFilePathsByGlob({
   filePaths,
   include,
   exclude,
-}: IFilterFilePathsByGlobParams): Promise<string[]> {
+}: {
+  rootDir: string;
+  filePaths: string[];
+  include?: string[];
+  exclude?: string[];
+}): Promise<string[]> {
   if ((include == null || include.length <= 0) && (exclude == null || exclude.length <= 0)) {
     return filePaths;
   }
@@ -38,14 +36,14 @@ export async function filterFilePathsByGlob({
   if (include != null && include.length > 0) {
     const includePathSet = await resolveGlobPathSet(rootDir, include);
     filteredPathSet = new Set(
-      filteredPathSet.values().filter((filePath) => includePathSet.has(filePath)),
+      Array.from(filteredPathSet.values()).filter((filePath) => includePathSet.has(filePath)),
     );
   }
 
   if (exclude != null && exclude.length > 0) {
     const excludePathSet = await resolveGlobPathSet(rootDir, exclude);
     filteredPathSet = new Set(
-      filteredPathSet.values().filter((filePath) => !excludePathSet.has(filePath)),
+      Array.from(filteredPathSet.values()).filter((filePath) => !excludePathSet.has(filePath)),
     );
   }
 

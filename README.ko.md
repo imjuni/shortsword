@@ -52,6 +52,7 @@ npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 | `--use-abs-path` | - | `false` | 상대 경로 import 검사 |
 | `--include` | `-i` | - | 추가로 포함할 glob 패턴 |
 | `--exclude` | `-x` | - | 추가로 제외할 glob 패턴 |
+| `--overrides` | `-o` | - | 특정 glob 패턴에 적용할 옵션 override JSON 배열 |
 | `--project` | `-p` | `./tsconfig.json` | `tsconfig.json` 경로. 검사 대상 파일을 tsconfig.json 기준으로 자동 적용 |
 | `--language` | `-l` | 자동 감지 | 메시지 언어 |
 | `--verbose` | `-v` | `false` | 디버그 로그 출력 |
@@ -81,6 +82,14 @@ export default {
   "max-files": 10,
   "use-abs-path": false,
   exclude: ["**/*.test.ts", "**/__tests__/**", "**/__test__/**"],
+  overrides: [
+    {
+      include: ["src/generated/**"],
+      "max-statements": 10,
+      "max-files": 100,
+      "use-abs-path": false,
+    },
+  ],
   project: "./tsconfig.json",
 };
 ```

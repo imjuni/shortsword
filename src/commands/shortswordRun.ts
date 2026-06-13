@@ -11,6 +11,7 @@ import { loadArgs } from "#modules/args/loadArgs.js";
 import { countTopLevelDeclarations } from "#modules/compilers/countTopLevelDeclarations.js";
 import { findRelativeImports } from "#modules/compilers/findRelativeImports.js";
 import { getTypeScriptProject } from "#modules/compilers/getTypeScriptProject.js";
+import { buildOverrideOptionMaps } from "#modules/options/buildOverrideOptionMaps.js";
 import { buildCorrectCasePathMap } from "#modules/paths/buildCorrectCasePathMap.js";
 import { filterFilePathsByGlob } from "#modules/paths/filterFilePathsByGlob.js";
 import { getDirPathMap } from "#modules/paths/getDirPathMap.js";
@@ -36,6 +37,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     include: config.data.include,
     maxFiles: config.data["max-files"],
     maxStatements: config.data["max-statements"],
+    overrides: config.data.overrides,
     project: tsconfigPath,
     tsconfigDir,
     useAbsPath: config.data["use-abs-path"],
@@ -88,6 +90,22 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   const dirPathMap = await getDirPathMap(filteredRawFilePaths);
   consola.debug("Built directory path map", { count: dirPathMap.size });
 
+  const overrideOptions = await buildOverrideOptionMaps({
+    rootDir: tsconfigDir,
+    filePaths: filteredRawFilePaths,
+    dirPaths: Array.from(dirPathMap.keys()),
+    config: config.data,
+  });
+  const getFileOptions = (filePath: string) =>
+    overrideOptions.fileOptionMap.get(pathe.normalize(filePath)) ?? overrideOptions.baseFileOptions;
+  const getDirectoryOptions = (dirPath: string) =>
+    overrideOptions.directoryOptionMap.get(pathe.normalize(dirPath)) ??
+    overrideOptions.baseDirectoryOptions;
+  consola.debug("Built override option maps", {
+    directories: overrideOptions.directoryOptionMap.size,
+    files: overrideOptions.fileOptionMap.size,
+  });
+
   const caseMap = await buildCorrectCasePathMap(dirPathMap);
   consola.debug("Built correct-case path map", { count: caseMap.size });
 
@@ -106,12 +124,10 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
   );
   consola.debug("Built source file map", { count: sourceFileMap.size });
 
-  const maxStatements = config.data["max-statements"];
-  const maxFiles = config.data["max-files"];
-
   const fileCountViolations = Array.from(dirPathMap.entries())
     .map(([dirPath, filePaths]) => ({
       dirPath,
+      maxFiles: getDirectoryOptions(dirPath)["max-files"],
       // getDirPathMap reads the real directory entries for case checking and
       // max-files detection. Apply the Shortsword include/exclude result here
       // so excluded files, such as *.test.ts, do not count toward max-files.
@@ -119,7 +135,7 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
         isIncludedFilePath(pathe.resolve(dirPath, filePath)),
       ),
     }))
-    .filter((entry) => entry.filePaths.length > maxFiles);
+    .filter((entry) => entry.filePaths.length > entry.maxFiles);
   consola.debug("Detected file count violations", {
     count: fileCountViolations.length,
   });
@@ -131,25 +147,25 @@ export const shortswordRun = async ({ args, cmd }: CommandContext<typeof shortsw
     // files into statement counting.
     .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
     .map((sourceFile) => ({
+      maxStatements: getFileOptions(sourceFile.getFilePath().toString())["max-statements"],
       sourceFile,
       statementCount: countTopLevelDeclarations(sourceFile),
     }))
-    .filter((entry) => entry.statementCount > maxStatements);
+    .filter((entry) => entry.statementCount > entry.maxStatements);
   consola.debug("Detected statement count violations", {
     count: statementCountViolations.length,
   });
 
-  const relativeImportViolations = config.data["use-abs-path"]
-    ? Array.from(sourceFileMap.values())
-        // Keep the import check on the same include/exclude-filtered file set as
-        // other checks.
-        .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
-        .map((sourceFile) => ({
-          relativeImports: findRelativeImports(sourceFile),
-          sourceFile,
-        }))
-        .filter((entry) => entry.relativeImports.length > 0)
-    : [];
+  const relativeImportViolations = Array.from(sourceFileMap.values())
+    // Keep the import check on the same include/exclude-filtered file set as
+    // other checks.
+    .filter((sourceFile) => isIncludedFilePath(sourceFile.getFilePath().toString()))
+    .filter((sourceFile) => getFileOptions(sourceFile.getFilePath().toString())["use-abs-path"])
+    .map((sourceFile) => ({
+      relativeImports: findRelativeImports(sourceFile),
+      sourceFile,
+    }))
+    .filter((entry) => entry.relativeImports.length > 0);
   consola.debug("Detected relative import violations", {
     count: relativeImportViolations.length,
     enabled: config.data["use-abs-path"],
