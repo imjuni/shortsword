@@ -52,6 +52,7 @@ npx swd -s 2 -f 10 -x "**/*.test.ts,**/__tests__/**" -p ./tsconfig.json
 | `--use-abs-path` | - | `false` | Detect relative imports and prefer path alias or subpath imports |
 | `--include` | `-i` | - | Additional include glob patterns |
 | `--exclude` | `-x` | - | Additional exclude glob patterns |
+| `--overrides` | `-o` | - | JSON array of option overrides for specific glob patterns |
 | `--project` | `-p` | `./tsconfig.json` | Path to the `tsconfig.json` used to resolve target files |
 | `--language` | `-l` | auto-detected | Message language |
 | `--verbose` | `-v` | `false` | Show debug logs |
@@ -81,6 +82,14 @@ export default {
   "max-files": 10,
   "use-abs-path": false,
   exclude: ["**/*.test.ts", "**/__tests__/**", "**/__test__/**"],
+  overrides: [
+    {
+      include: ["src/generated/**"],
+      "max-statements": 10,
+      "max-files": 100,
+      "use-abs-path": false,
+    },
+  ],
   project: "./tsconfig.json",
 };
 ```
